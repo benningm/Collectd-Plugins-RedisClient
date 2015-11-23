@@ -60,21 +60,16 @@ sub redis_client_stats_config {
 }
 
 sub _connect_redis {
-    if( ! defined $redis ) {
-        eval { $redis = Redis->new( 'server' => $server ) };
-        if( $@ ) {
-            die('could not connect to redis: '.$@);
-        }
-    }
-    return $redis;
+  if( ! defined $redis ) {
+    $redis = Redis->new( 'server' => $server );
+  }
+  return $redis;
 }
 
 sub redis_client_stats_read {
-    eval {
-      _connect_redis();
-    };
+    eval { _connect_redis(); };
     if( $@ ) {
-      plugin_log(LOG_ERROR, "cant connect to redis: $@");
+      plugin_log(LOG_WARNING, "cant connect to redis: $@");
       return 1;
     }
     

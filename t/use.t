@@ -4,6 +4,8 @@ use warnings;
 use Test::More;
 use File::Find;
 
+plan skip_all => "Using Collectd outside of collectd-perl causes strictness errors";
+
 our $count = 0;
 
 find(\&find_cb, './lib');
