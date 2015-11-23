@@ -74,7 +74,10 @@ sub redis_client_stats_read {
     
     foreach my $metric (keys %$metrics) {
         my $type  = $metrics->{$metric};
+
         my @keys = $redis->keys( $metric );
+        if( scalar(@keys) == 0 ) { next; }
+
         my @values = $redis->mget( @keys );
         for( my $i = 0 ; $i < scalar @keys ; $i++ ) {
             my $vl = {
