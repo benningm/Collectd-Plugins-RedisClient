@@ -70,7 +70,13 @@ sub _connect_redis {
 }
 
 sub redis_client_stats_read {
-    _connect_redis();
+    eval {
+      _connect_redis();
+    };
+    if( $@ ) {
+      plugin_log(LOG_ERROR, "cant connect to redis: $@");
+      return 1;
+    }
     
     foreach my $metric (keys %$metrics) {
         my $type  = $metrics->{$metric};
